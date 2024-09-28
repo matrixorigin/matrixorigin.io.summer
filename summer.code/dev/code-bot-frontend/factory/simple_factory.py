@@ -11,7 +11,7 @@ from utils.text_util import preprocess_text
 UNIT_HEIGHT = 35
 class SimpleFactory:
     def create_friend_card(self, width, text):
-        return self.create_card('friend',width, text)
+        return self.create_card('friend', width, text)
 
     def create_self_card(self, width, text):
         return self.create_card('self', width, text)

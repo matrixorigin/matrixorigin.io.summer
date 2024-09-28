@@ -23,6 +23,8 @@ class ChatClient:
     def send_msg(self, name, group_name, text):
         return group_name + "%" + self.call_api(name, text)
 
+
+    # get login code
     def send_code(self, code):
         try:
             response = requests.get(f"http://localhost:8080/codebot/login/valid?code={code}")

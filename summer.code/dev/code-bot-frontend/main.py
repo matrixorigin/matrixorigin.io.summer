@@ -5,7 +5,7 @@ from PyQt5.QtWidgets import QDialog, QApplication, QMainWindow
 
 from client.chat import ChatClient
 from domain.Message import Message
-from thread.worker_thread import SendThread
+from thread.worker_thread import SendThread, UpdateThread
 
 from ui.chat_system_ui import Ui_Form
 from ui.signin_ui import Ui_Form as Signin_Form
@@ -197,6 +197,15 @@ class MyMainForm(QDialog, Ui_Form):
         )
         self.thread.result_ready.connect(self.update_response)
         self.thread.start()
+
+    def asyn_update(self, text, group_name):
+        self.thread = UpdateThread(
+
+        )
+        self.thread.result_ready.connect(self.update_response)
+        self.thread.start()
+
+
 
     def update_response(self, response):
         # group_name, response
