@@ -238,7 +238,7 @@ class MyMainForm(QDialog, Ui_Form):
                 if group_item:
                     status = group_item.label_3.text()
                     if status == 'building':
-                        self.chat_client.
+                        self.chat_client.subscribe(self.user_id, group_item.label.text())
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     # app.setAttribute(Qt.AA_EnableHighDpiScaling, True)  # 自适应高分屏
