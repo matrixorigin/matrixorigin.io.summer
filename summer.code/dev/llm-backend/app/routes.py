@@ -47,7 +47,6 @@ def subscribe():
     if db.check_table_exists('code_repo', repo_name):
         return jsonify({"status": "success"}), 200
     else:
-        repo_name = repo_name.replace("ANDAND", "/")
         # print(repo_name)
         repo_url = 'https://github.com/' + repo_name
         excutor.submit(download_task, repo_url)
