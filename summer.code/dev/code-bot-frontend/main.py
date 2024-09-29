@@ -243,6 +243,6 @@ if __name__ == "__main__":
     app = QApplication(sys.argv)
     # app.setAttribute(Qt.AA_EnableHighDpiScaling, True)  # 自适应高分屏
     app.setAttribute(Qt.AA_UseHighDpiPixmaps, True)
-    main = MyMainForm('123')
+    main = LoginForm()
     main.show()
     sys.exit(app.exec_())
