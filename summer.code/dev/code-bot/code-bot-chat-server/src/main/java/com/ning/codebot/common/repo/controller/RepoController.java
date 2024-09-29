@@ -10,10 +10,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -22,21 +19,30 @@ import javax.validation.Valid;
 @Api(tags = "The interface for chat service")
 @Slf4j
 public class RepoController {
-    @Autowired
-    LLMClient llmClient;
+
     @Autowired
     RepoService repoService;
 
     @PostMapping("/upload")
     @ApiOperation("subscribe the repository")
-    public ApiResult<ChatMessageResp> sendMsg(@Valid @RequestBody RepoUploadReq request) {
+    public ApiResult<ChatMessageResp> upload(@Valid @RequestBody RepoUploadReq request) {
         // store in DB
         repoService.storeRepo(request.getUserName(), request.getRepoName());
-        if (llmClient.subscribeRepo(request.getRepoName(), request.getUserName())){
-            return ApiResult.success();
-        }else{
-            return ApiResult.fail(1, "fail subscribe the repository");
-        }
+        return ApiResult.success();
     }
 
+    @PostMapping("/check")
+    @ApiOperation("check the repository status")
+    public ApiResult<ChatMessageResp> check(@Valid @RequestBody RepoUploadReq request) {
+        // store in DB
+        int res = repoService.checkRepo(request.getUserName(), request.getRepoName());
+        ChatMessageResp chatMessageResp = new ChatMessageResp();
+        if (res == 0)
+            chatMessageResp.setContent("building");
+        if (res == 1)
+            chatMessageResp.setContent("success");
+        else
+            chatMessageResp.setContent("fail");
+        return ApiResult.success(chatMessageResp);
+    }
 }

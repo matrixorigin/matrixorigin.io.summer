@@ -17,4 +17,10 @@ public class RepoServiceImpl implements RepoService {
         if(repoDao.hasRepo(userName, repoName)) return ;
         repoDao.save(UserRepoAdapter.buildUserRepo(userName, repoName));
     }
+
+    @Override
+    // 0 building 1 success 2 failure
+    public Integer checkRepo(String userName, String repoName){
+        return repoDao.checkRepo(userName, repoName);
+    }
 }
