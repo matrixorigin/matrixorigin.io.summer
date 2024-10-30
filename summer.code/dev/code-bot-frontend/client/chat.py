@@ -3,6 +3,7 @@ from typing import List
 from domain.Message import Message
 import requests
 
+
 def mock(name, group_name, text):
     return group_name + '%I want to recommend M365 Business for you because it offers a comprehensive suite of tools that can significantly enhance productivity and collaboration within your team. With M365 Business, you get access to essential applications like Word, Excel, and PowerPoint, as well as powerful cloud services like OneDrive and SharePoint.'
 
@@ -11,17 +12,80 @@ GUIDE_CONVERSATION = 'I am Opportunity Copilot. How can I assist you today? I ca
 
 
 class ChatClient:
-    def get_groups(self, user_id):
-        return ['default']
+    """
+    func: get the user's group
+    """
+    def get_groups(self, user_id:str) -> List[str]:
+        # return get_groups_mock()
+        try:
+            url = "http://localhost:8080/codebot/repo/groups"
+            params = {
+                "userName": user_id
+            }
+            response = requests.get(url, params=params)
+            response_data = response.json()
+            return response_data.get("data")
+        except Exception as e:
+            print(e)
+        return None
 
-    def get_mes(self, user_id: str, group_name: str) -> List[Message]:
-        return [Message(
-            sender='bot',
-            content=GUIDE_CONVERSATION
-        )]
+    """
+    func: get the user's chat history
+    """
+    def get_mes(self, user_id: str, group_name: str, id:int, is_guide:bool) -> List[Message]:
+        if is_guide:
+            return get_mes_mock()
+        try:
+            url = "http://localhost:8080/codebot/chat/getMes"
+            params = {
+                "userName": user_id,
+                "roomName": group_name,
+                "id": id
+            }
+            response = requests.get(url, params=params)
+            response_data = response.json()
+            return response_data.get("data")
+        except Exception as e:
+            print(e)
+        return None
 
+
+    """
+    func: send the message from the db
+    """
     def send_msg(self, name, group_name, text):
-        return group_name + "%" + self.call_api(name, text)
+        try:
+            url = "http://localhost:8080/codebot/chat/msg"
+            data = {
+                "roomName": group_name,
+                "senderName": name,
+                "content": text,
+                "msgType": 1
+            }
+            response = requests.post(url, json=data)
+            response_data = response.json()
+            response_id = response_data.get("data")
+            # print(response_id)
+            # print(response_data)
+            return response_id['id']
+        except Exception as e:
+            print(e)
+        return 'error'
+
+    def subscribe(self, user_id:str, group_name:str):
+        try:
+            url = "http://localhost:8080/codebot/repo/upload"
+            data = {
+                "userName": user_id,
+                "repoName": group_name,
+            }
+            response = requests.post(url, json=data)
+            response_data = response.json()
+            res = response_data.get("success")
+            return res
+        except Exception as e:
+            print(e)
+            return False
 
     def send_code(self, code):
         try:
@@ -75,4 +139,15 @@ class ChatClient:
         except Exception as e:
             print("An error occurred:", e)
 
+
+def get_groups_mock():
+    return ['default', 'spring boot', 'matrix one']
+
+
+GUIDE_CONVERSATION = 'Hi, I am code chat bot, what can I help you today'
+def get_mes_mock():
+    return [Message(
+        sender='bot',
+        content=GUIDE_CONVERSATION
+    )]
 

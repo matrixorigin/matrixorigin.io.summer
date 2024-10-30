@@ -20,9 +20,15 @@ spring:
   jackson:
     serialization:
       write-dates-as-timestamps: true
+  kafka:
+    topic:
+      my-topic1: ${kafka.topic.mytopic1}
+      my-topic2: ${kafka.topic.mytopic2}
+
 
 jwt:
   secret: ${codebot.jwt.secret}
+
 
 github:
   client:
@@ -31,3 +37,9 @@ github:
     redirect-url: "http://localhost:8080/codebot/login/oauth2/callback&state="
     access-token-url: "https://github.com/login/oauth/access_token"
     user-info-url: "https://api.github.com/user"
+
+llm:
+  backend:
+    subscribe:${llm.backend.subscribe.url}
+
+
